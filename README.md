@@ -79,8 +79,9 @@ The engine is checked against values that do not depend on it.
 Every expected number in `tests/` was stated aloud by the instructor of a university steel design course while working an example, and most were cross-checked against a published AISC Manual table in the same breath. Those two independent sources are the ground truth.
 
 ```
-tests/test_tension.py ....... 17 passed
-tests/test_compression.py .... 19 passed
+tests/test_tension.py ............. 17 passed
+tests/test_compression.py ........ 21 passed
+tests/test_steelpy_integration.py  29 passed   (full AISC database)
 ```
 
 A few that carry real weight:
@@ -133,15 +134,30 @@ Not implemented: Chapter F (flexure), Chapter G (shear), block shear, connection
 
 ### Section property data
 
-The seed set in `steelcheck/shapes.py` holds only the handful of shapes needed to reproduce the documented worked examples. For full coverage, download the **AISC Shapes Database** — AISC publishes it free alongside the Steel Construction Manual — save it as `data/aisc_shapes.csv`, and:
+The seed set in `steelcheck/shapes.py` holds only the handful of shapes needed to reproduce the documented worked examples. For the full 1,660-shape database:
 
-```python
-sc.shapes.load_aisc_csv("data/aisc_shapes.csv")
+```bash
+pip install steelpy
 ```
 
-No AISC file is redistributed here. Section dimensions are factual data, but the Shapes Database and the *Specification* carry their own terms — **check the current license yourself before redistributing anything.** Implementing the Specification's equations is ordinary practice; republishing its tables is not.
+```python
+sc.shapes.load_from_steelpy()      # W, C, L, WT, HSS, S, M, HP, MT, ST, PIPE
+```
 
-Two values in the seed set (`W14X90` area and radii, `WT5X15` area) were inferred to reproduce quoted capacities rather than read from a table, and are flagged as such in `source`. Verify them before using them for anything real.
+Two ratios the Manual prints are not stored in that dataset and are derived:
+
+```
+bf/2tf = bf / (2*tf)
+h/tw   = (d - 2k) / tw
+```
+
+Both reproduce the published figures to three significant figures — W12×65 gives 9.917 and 24.87 against a published 9.92 and 24.9.
+
+Alternatively, the **AISC Shapes Database** is a direct download if you have access (free to AISC members; [student membership](https://www.aisc.org/aisc-membership/member-types/student/) is the cheap route). Save it as `data/aisc_shapes.csv` and call `sc.shapes.load_aisc_csv(...)` instead.
+
+No AISC file is redistributed here, and `data/*.csv` is gitignored. Section dimensions are factual data, but the Shapes Database and the *Specification* carry their own terms — **check them before redistributing anything.** Implementing the Specification's equations is ordinary practice; republishing its tables is not.
+
+`tests/test_steelpy_integration.py` re-runs every validation case against the full database. That makes it a three-way agreement: the published AISC table value, the instructor's hand calculation, and this engine running on official section properties. It also confirmed the two seed values that had been inferred rather than transcribed (`W14X90` area 26.5 in², `WT5X15` area 4.42 in²) were correct.
 
 ---
 

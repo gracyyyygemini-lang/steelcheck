@@ -213,3 +213,137 @@ def autoload(data_dir: str | Path = "data") -> int:
     """Load ``data/aisc_shapes.csv`` if present. Returns shapes loaded, or 0."""
     p = Path(data_dir) / "aisc_shapes.csv"
     return load_aisc_csv(p) if p.exists() else 0
+
+
+# ---------------------------------------------------------------------------
+# steelpy adapter
+# ---------------------------------------------------------------------------
+#
+# ``pip install steelpy`` gives the same section property data without going
+# through AISC's download. Verified: every value it reports for the shapes in
+# the seed set matches the published figure exactly (W12X65 A = 19.1, rx = 5.28,
+# ry = 3.02; L6X4X1/2 xbar = 0.981, ybar = 1.98; C10X30 xbar = 0.649).
+#
+# Two ratios the Manual prints are not stored and have to be derived:
+#
+#   bf/2tf = bf / (2*tf)
+#   h/tw   = (d - 2k) / tw     h is the clear distance between fillets, and k
+#                              is the flange-face-to-fillet-toe distance.
+#
+# Both reproduce the published values to three significant figures -- W12X65
+# gives 9.917 and 24.87 against a published 9.92 and 24.9.
+
+#: steelpy family attribute -> our family code.
+_STEELPY_FAMILIES = {
+    "W_shapes": "W", "M_shapes": "M", "S_shapes": "S", "HP_shapes": "HP",
+    "C_shapes": "C", "MC_shapes": "MC", "L_shapes": "L",
+    "WT_shapes": "WT", "MT_shapes": "MT", "ST_shapes": "ST",
+    "HSS_shapes": "HSS", "HSS_R_shapes": "HSS", "PIPE_shapes": "PIPE",
+}
+
+#: Families whose webs and flanges follow the rolled I-shape slenderness rules.
+_I_FAMILIES = {"W", "M", "S", "HP"}
+
+
+def _num(v) -> float | None:
+    """steelpy writes an en-dash for 'not applicable'."""
+    if v is None:
+        return None
+    s = str(v).strip()
+    if s in ("", "-", "–", "—", "N/A"):
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def _steelpy_designation(name: str) -> str:
+    """``L6X4X1_2`` -> ``L6X4X1/2``; underscores encode fraction slashes."""
+    return name.replace("_", "/")
+
+
+def load_from_steelpy(families: list[str] | None = None, overwrite: bool = True) -> int:
+    """Populate the registry from the ``steelpy`` package.
+
+    An alternative to the AISC Shapes Database download that needs no account
+    and no spreadsheet conversion::
+
+        pip install steelpy
+
+        import steelcheck as sc
+        sc.shapes.load_from_steelpy()
+
+    Returns the number of shapes loaded.
+    """
+    try:
+        from steelpy import aisc
+    except ImportError:
+        raise ImportError(
+            "steelpy is not installed. Run `pip install steelpy`, or load the "
+            "AISC Shapes Database CSV with load_aisc_csv() instead."
+        ) from None
+
+    wanted = families or list(_STEELPY_FAMILIES)
+    loaded = 0
+
+    for attr in wanted:
+        fam = _STEELPY_FAMILIES.get(attr)
+        if fam is None:
+            continue
+        try:
+            group = getattr(aisc, attr)
+            names = list(group.sections)
+        except AttributeError:
+            continue
+
+        for raw_name in names:
+            try:
+                p = getattr(group, raw_name).properties
+            except AttributeError:
+                continue
+
+            g = lambda k: _num(p.get(k))  # noqa: E731
+            kwargs: dict[str, float] = {}
+
+            def put(field: str, value: float | None) -> None:
+                if value is not None:
+                    kwargs[field] = value
+
+            put("A", g("area"))
+            if kwargs.get("A") is None:
+                continue
+
+            for field in ("rx", "ry", "Ix", "Iy", "Sx", "Sy", "Zx", "Zy"):
+                put(field, g(field))
+            put("xbar", g("x"))
+            put("ybar", g("y"))
+
+            if fam == "L":
+                # For an angle, steelpy's d is the SHORT leg and b the long one.
+                put("leg_long", g("b"))
+                put("leg_short", g("d"))
+                put("t", g("t"))
+            else:
+                put("d", g("d"))
+                put("bf", g("bf"))
+                put("tf", g("tf"))
+                put("tw", g("tw"))
+                put("t", g("t"))
+
+            if fam in _I_FAMILIES:
+                bf, tf, d, k, tw = (g("bf"), g("tf"), g("d"), g("k"), g("tw"))
+                if bf and tf:
+                    kwargs["bf_2tf"] = round(bf / (2 * tf), 3)
+                if d and k and tw:
+                    kwargs["h_tw"] = round((d - 2 * k) / tw, 2)
+
+            designation = _steelpy_designation(raw_name)
+            if not overwrite and _key(designation) in _REGISTRY:
+                continue
+            register(Shape(
+                designation=designation, family=fam, source="steelpy", **kwargs
+            ))
+            loaded += 1
+
+    return loaded

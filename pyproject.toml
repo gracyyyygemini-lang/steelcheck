@@ -18,8 +18,9 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+data = ["steelpy>=1.1"]
 bench = ["anthropic>=0.40"]
-dev = ["pytest>=8", "anthropic>=0.40"]
+dev = ["pytest>=8", "anthropic>=0.40", "steelpy>=1.1"]
 
 [tool.setuptools.packages.find]
 include = ["steelcheck*"]
