@@ -1,0 +1,1040 @@
+{
+  "schema": 1,
+  "n": 68,
+  "trap_counts": {
+    "units": 45,
+    "recommended_K": 28,
+    "which_limit_state": 15,
+    "governing_direction": 14,
+    "n_minus_1": 14,
+    "hole_count": 14,
+    "per_segment_K": 13,
+    "xbar_vs_ybar": 12,
+    "weld_net_area": 4,
+    "weld_case_4": 4,
+    "multi_segment": 4,
+    "hole_allowance": 3,
+    "grade_dependent_lambda": 2,
+    "bolt_fit": 1,
+    "lrfd_vs_asd": 1,
+    "elastic_branch": 1
+  },
+  "notes": "Gold answers marked source='lecture' are independent of this code. Those marked 'engine' were computed by steelcheck, which the lecture-anchored problems validate (see tests/).",
+  "problems": [
+    {
+      "id": "anchor-col-01",
+      "category": "compression",
+      "traps": [
+        "governing_direction",
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 12 ft long and pinned at both ends about both axes. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 727.0
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-17; AISC Table 4-1a reads 728"
+    },
+    {
+      "id": "anchor-col-02",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 26 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top and bottom and braced 14 ft above the base. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 686.0
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-22; AISC Table 4-1a at 14 ft reads 685"
+    },
+    {
+      "id": "anchor-ten-01",
+      "category": "tension",
+      "traps": [
+        "which_limit_state"
+      ],
+      "prompt": "A W10X30 tension member of A992 steel is connected through both flanges and the web with 3/4 in. bolts, so that load is transmitted directly to all cross-sectional elements. There are 4 holes in the flanges and 2 in the web at the critical section. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 318.0,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-10"
+    },
+    {
+      "id": "anchor-ten-02",
+      "category": "tension",
+      "traps": [
+        "n_minus_1",
+        "hole_count",
+        "xbar_vs_ybar"
+      ],
+      "prompt": "A W10X30 tension member of A992 steel is connected through the FLANGES ONLY with 3/4 in. bolts, 2 per flange per row and 5 bolts per line at 3 in. on center. Take xbar = 1.10 in. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 312.0
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-11"
+    },
+    {
+      "id": "anchor-ten-03",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "bolt_fit"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 6 bolts per line. A 4 in. leg accommodates one bolt per row. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 182.0
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-11"
+    },
+    {
+      "id": "anchor-ten-04",
+      "category": "tension",
+      "traps": [
+        "which_limit_state",
+        "weld_net_area"
+      ],
+      "prompt": "A C10X30 tension member of A572 Gr. 50 steel is connected at the web with longitudinal welds 12 in. long in combination with transverse welds. Take xbar = 0.649 in. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 396.0,
+        "limit_state": "tensile yielding"
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-13 -- the one case where YIELDING governs"
+    },
+    {
+      "id": "anchor-ten-05",
+      "category": "tension",
+      "traps": [
+        "weld_case_4"
+      ],
+      "prompt": "A C10X30 tension member of A572 Gr. 50 steel is connected at the web with LONGITUDINAL WELDS ONLY, 12 in. long, separated by 10 in. Take xbar = 0.649 in. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 330.0
+      },
+      "tolerance": 0.02,
+      "source": "lecture 2026-09-13"
+    },
+    {
+      "id": "anchor-load-01",
+      "category": "loads",
+      "traps": [
+        "lrfd_vs_asd"
+      ],
+      "prompt": "A tension member carries PD = 35 kips and PL = 95 kips. Calculate the required tensile strength by (a) LRFD and (b) ASD, in kips.",
+      "answer": {
+        "Pu": 194.0,
+        "Pa": 130.0
+      },
+      "tolerance": 0.02,
+      "source": "Quiz 3, 2026-09-25"
+    },
+    {
+      "id": "gen-col-001",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 10 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 765.8
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-002",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 10 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 818.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-003",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 10 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 798.3
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-004",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 16 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 639.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-005",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 16 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 758.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-006",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 16 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 711.4
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-007",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 22 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 491.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-008",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 22 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 678.8
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-009",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 22 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 601.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-010",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 28 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 347.7
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-011",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 28 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 586.4
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-012",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 28 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 481.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-013",
+      "category": "compression",
+      "traps": [
+        "units",
+        "elastic_branch"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 34 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 236.4
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-014",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 34 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 489.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-015",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 34 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 365.9
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-016",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 10 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1104.2
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-017",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 10 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1154.4
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-018",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 10 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1135.2
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-019",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 16 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 979.4
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-020",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 16 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1097.3
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-021",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 16 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1051.3
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-022",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 22 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 821.9
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-023",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 22 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 1019.0
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-024",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 22 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 939.7
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-025",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 28 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 652.5
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-026",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 28 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 924.3
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-027",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 28 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 810.7
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-028",
+      "category": "compression",
+      "traps": [
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 34 ft long and pinned at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 490.2
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-029",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 34 ft long and fixed at both ends about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 819.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-030",
+      "category": "compression",
+      "traps": [
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 34 ft long and fixed at the base and pinned at the top about both axes, with no intermediate bracing. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 675.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-031",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 30 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 15 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 662.9,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-032",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 30 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 12 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 591.3,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-033",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 36 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 20 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 639.6,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-034",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 24 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 10 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 685.5,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-035",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 30 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 15 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 1003.0,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-036",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 30 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 12 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 929.5,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-037",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 36 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 20 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 979.4,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-038",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "governing_direction",
+        "units",
+        "recommended_K"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 24 ft tall. About the x-axis it is fixed at the top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced 10 ft above the base. Determine the available compressive strength by LRFD, in kips, and state which axis governs.",
+      "answer": {
+        "phi_c_Pn": 1025.6,
+        "governing_axis": "y"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-039",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "multi_segment",
+        "governing_direction",
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 44 ft tall. About the x-axis it is fixed top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced at 18 ft and 32 ft above the base. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 631.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-040",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "multi_segment",
+        "governing_direction",
+        "units"
+      ],
+      "prompt": "A W12X65 column of A992 steel is 40 ft tall. About the x-axis it is fixed top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced at 12 ft and 26 ft above the base. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 665.8
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-041",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "multi_segment",
+        "governing_direction",
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 44 ft tall. About the x-axis it is fixed top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced at 18 ft and 32 ft above the base. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 949.0
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-042",
+      "category": "compression",
+      "traps": [
+        "per_segment_K",
+        "multi_segment",
+        "governing_direction",
+        "units"
+      ],
+      "prompt": "A W14X90 column of A992 steel is 40 ft tall. About the x-axis it is fixed top and bottom with no intermediate bracing. About the y-axis it is pinned at the top, fixed at the base, and braced at 12 ft and 26 ft above the base. Determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 987.3
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-043",
+      "category": "compression",
+      "traps": [
+        "grade_dependent_lambda",
+        "units"
+      ],
+      "prompt": "A W12X65 column of A913 Gr. 65 steel (Fy = 65 ksi) is 14 ft long, pinned at both ends about both axes. First confirm the section is non-slender at this grade, then determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 832.6
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-col-044",
+      "category": "compression",
+      "traps": [
+        "grade_dependent_lambda",
+        "units"
+      ],
+      "prompt": "A W12X65 column of A913 Gr. 80 steel (Fy = 80 ksi) is 14 ft long, pinned at both ends about both axes. First confirm the section is non-slender at this grade, then determine the available compressive strength by LRFD, in kips.",
+      "answer": {
+        "phi_c_Pn": 957.5
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-001",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the LONG leg with 3/4 in. bolts at 3 in. on center, 3 bolts per line, 2 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 158.0,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-002",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 3 bolts per line, 1 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 140.9,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-003",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the LONG leg with 3/4 in. bolts at 3 in. on center, 4 bolts per line, 2 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 168.3,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-004",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 4 bolts per line, 1 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 164.0,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-005",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the LONG leg with 3/4 in. bolts at 3 in. on center, 5 bolts per line, 2 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 173.5,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-006",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 5 bolts per line, 1 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 175.5,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-007",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the LONG leg with 3/4 in. bolts at 3 in. on center, 6 bolts per line, 2 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 176.6,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-008",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 6 bolts per line, 1 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 182.5,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-009",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the LONG leg with 3/4 in. bolts at 3 in. on center, 7 bolts per line, 2 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 178.6,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-010",
+      "category": "tension",
+      "traps": [
+        "xbar_vs_ybar",
+        "n_minus_1",
+        "hole_count",
+        "which_limit_state"
+      ],
+      "prompt": "An L6X4X1/2 tension member of A572 Gr. 50 steel is connected through the SHORT leg with 3/4 in. bolts at 3 in. on center, 7 bolts per line, 1 bolt(s) per row. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 187.1,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-011",
+      "category": "tension",
+      "traps": [
+        "hole_count",
+        "n_minus_1",
+        "hole_allowance"
+      ],
+      "prompt": "A W10X30 tension member of A992 steel is connected through the FLANGES ONLY with 7/8 in. bolts, 3 per line at 3 in. on center, 2 per flange per row. Take xbar = 1.10 in. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 270.7
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-012",
+      "category": "tension",
+      "traps": [
+        "hole_count",
+        "n_minus_1",
+        "hole_allowance"
+      ],
+      "prompt": "A W10X30 tension member of A992 steel is connected through the FLANGES ONLY with 7/8 in. bolts, 5 per line at 3 in. on center, 2 per flange per row. Take xbar = 1.10 in. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 301.1
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-013",
+      "category": "tension",
+      "traps": [
+        "hole_count",
+        "n_minus_1",
+        "hole_allowance"
+      ],
+      "prompt": "A W10X30 tension member of A992 steel is connected through the FLANGES ONLY with 7/8 in. bolts, 7 per line at 3 in. on center, 2 per flange per row. Take xbar = 1.10 in. Determine the available tensile strength by LRFD, in kips.",
+      "answer": {
+        "phi_Pn": 311.2
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-014",
+      "category": "tension",
+      "traps": [
+        "weld_case_4",
+        "weld_net_area",
+        "which_limit_state"
+      ],
+      "prompt": "A C10X30 tension member of A572 Gr. 50 steel is connected at the web with LONGITUDINAL WELDS ONLY, 8 in. long, separated by 10 in. Take xbar = 0.649 in. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 259.5,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-015",
+      "category": "tension",
+      "traps": [
+        "weld_case_4",
+        "weld_net_area",
+        "which_limit_state"
+      ],
+      "prompt": "A C10X30 tension member of A572 Gr. 50 steel is connected at the web with LONGITUDINAL WELDS ONLY, 12 in. long, separated by 10 in. Take xbar = 0.649 in. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 329.9,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    },
+    {
+      "id": "gen-ten-016",
+      "category": "tension",
+      "traps": [
+        "weld_case_4",
+        "weld_net_area",
+        "which_limit_state"
+      ],
+      "prompt": "A C10X30 tension member of A572 Gr. 50 steel is connected at the web with LONGITUDINAL WELDS ONLY, 18 in. long, separated by 10 in. Take xbar = 0.649 in. Determine the available tensile strength by LRFD, in kips, and name the governing limit state.",
+      "answer": {
+        "phi_Pn": 375.4,
+        "limit_state": "tensile rupture"
+      },
+      "tolerance": 0.02,
+      "source": "engine"
+    }
+  ]
+}

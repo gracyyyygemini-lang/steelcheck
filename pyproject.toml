@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "steelcheck"
+version = "0.1.0"
+description = "Auditable AISC 360 design checks, with a benchmark for LLM performance on structural steel design"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["aisc", "structural", "steel", "engineering", "benchmark", "llm"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering",
+    "Intended Audience :: Science/Research",
+]
+dependencies = []
+
+[project.optional-dependencies]
+bench = ["anthropic>=0.40"]
+dev = ["pytest>=8", "anthropic>=0.40"]
+
+[tool.setuptools.packages.find]
+include = ["steelcheck*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
