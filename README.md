@@ -6,7 +6,7 @@ A structural engineer stamps a drawing and becomes personally liable for it. Tha
 
 This repository is two things:
 
-1. A small, tested Python engine that performs AISC 360 tension and compression checks and **returns the full hand calculation** — every intermediate value, with its equation and table citation.
+1. A small, tested Python engine that performs AISC 360 tension, compression and flexure checks and **returns the full hand calculation** — every intermediate value, with its equation and table citation.
 2. A benchmark that measures how well a language model does the same job **with and without** that engine, broken down by the specific reasoning step that fails.
 
 The second is the point. The first exists to make it measurable.
@@ -22,7 +22,7 @@ Structural design is a bad fit for a language model working alone, and the failu
 - **Branch selection.** Short versus long column, bolted versus welded net area, four separate shear-lag cases — each one a fork the model must take correctly before any arithmetic matters.
 - **Structural reasoning over geometry.** A lateral brace acts as a pin, so each unbraced segment carries *its own* K factor. Two 15 ft segments can have effective lengths of 15 ft and 12 ft. Picking the longer segment instead of the larger `K·L` is the single most common error, and it is invisible in the output.
 
-`bench/problems.json` tags all 68 problems by which of these traps they contain, so the benchmark reports accuracy **per failure mode** instead of one aggregate number. "Models score 61%" is a shrug. "Models score 94% on single-segment columns and 23% once a brace splits the member" tells you where the reasoning actually breaks — and that is a result worth writing up.
+`bench/problems.json` tags all 68 problems by which of these traps they contain, so the benchmark reports accuracy **per failure mode** instead of one aggregate number. Those 68 cover compression (46), tension (21) and load combinations (1) only — the benchmark does not yet exercise Chapter F, so nothing it reports says anything about how models handle flexure. "Models score 61%" is a shrug. "Models score 94% on single-segment columns and 23% once a brace splits the member" tells you where the reasoning actually breaks — and that is a result worth writing up.
 
 Run `python bench/run_bench.py --compare` to produce the numbers. They are not checked into this README, because reporting a benchmark you have not run is exactly the failure mode the project is about.
 
@@ -32,7 +32,7 @@ Run `python bench/run_bench.py --compare` to produce the numbers. They are not c
 
 ```bash
 pip install -e .
-pytest                       # 36 validation tests
+pytest                       # 93 validation tests
 python bench/run_bench.py --dry-run
 ```
 
@@ -76,13 +76,17 @@ Note the two segments: same 15 ft length, different effective lengths, because o
 
 The engine is checked against values that do not depend on it.
 
-Every expected number in `tests/` was stated aloud by the instructor of a university steel design course while working an example, and most were cross-checked against a published AISC Manual table in the same breath. Those two independent sources are the ground truth.
+Every expected number in the tension and compression tests was stated aloud by the instructor of a university steel design course while working an example, and most were cross-checked against a published AISC Manual table in the same breath. Those two independent sources are the ground truth.
 
 ```
 tests/test_tension.py ............. 17 passed
-tests/test_compression.py ........ 21 passed
-tests/test_steelpy_integration.py  29 passed   (full AISC database)
+tests/test_compression.py ......... 19 passed
+tests/test_flexure.py ............. 26 passed
+tests/test_steelpy_integration.py . 31 passed   (full AISC database)
+                                    93 total
 ```
+
+The flexure tests are the exception: their seed section properties (W18×35, W16×31, W21×48, and the flexure properties of W12×65) come from steelpy, not from lecture, and are tagged for verification against Table 1-1. Because the hand calculations were worked from those same properties, each flexure capacity test also asserts against the published AISC Table 3-2 value as the independent check.
 
 A few that carry real weight:
 
@@ -128,9 +132,10 @@ Implemented:
 
 - **Chapter D** — tensile yielding (Eq. D2-1) and rupture (Eq. D2-2), net area with hole allowances, all four Table D3.1 shear lag cases, LRFD and ASD.
 - **Chapter E** — Table B4.1a classification gate, per-segment effective lengths from Table C-A-7.1, the equivalent-effective-length method for the critical direction, Eqs. E3-1 through E3-4.
+- **Chapter F** — doubly symmetric I-shapes bent about the major axis. Table B4.1b compactness gate, yielding (Eq. F2-1), inelastic and elastic lateral-torsional buckling with Lp and Lr (Eqs. F2-2 through F2-6), the Cb moment-gradient factor (Eq. F1-1) capped at Mp, and flange local buckling for noncompact flanges (Eq. F3-1), LRFD and ASD.
 - **Load combinations** — ASCE 7 basic dead and live combinations for both methods.
 
-Not implemented: Chapter F (flexure), Chapter G (shear), block shear, connection design, slender-element members (Section E7), and anything seismic. The scope is deliberately the part that could be validated against published values rather than the part that would look most complete.
+Not implemented: flexure beyond major-axis I-shapes with compact or noncompact flanges (slender flanges, minor-axis bending, Sections F4–F13), Chapter G (shear), block shear, connection design, slender-element members (Section E7), and anything seismic. The scope is deliberately the part that could be validated against published values rather than the part that would look most complete.
 
 ### Section property data
 

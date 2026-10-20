@@ -44,7 +44,7 @@ from steelcheck.tension import Bolted, Hole, Welded  # noqa: E402
 from steelcheck.tension import available_strength as tension_strength  # noqa: E402
 
 PROBLEMS = Path(__file__).parent / "problems.json"
-DEFAULT_MODEL = "claude-sonnet-4-5"
+DEFAULT_MODEL = "claude-sonnet-5-5"
 
 ANSWER_INSTRUCTION = """
 End your reply with a fenced json block holding only the requested quantities,
