@@ -24,7 +24,41 @@ Structural design is a bad fit for a language model working alone, and the failu
 
 `bench/problems.json` tags all 68 problems by which of these traps they contain, so the benchmark reports accuracy **per failure mode** instead of one aggregate number. Those 68 cover compression (46), tension (21) and load combinations (1) only — the benchmark does not yet exercise Chapter F, so nothing it reports says anything about how models handle flexure. "Models score 61%" is a shrug. "Models score 94% on single-segment columns and 23% once a brace splits the member" tells you where the reasoning actually breaks — and that is a result worth writing up.
 
-Run `python bench/run_bench.py --compare` to produce the numbers. They are not checked into this README, because reporting a benchmark you have not run is exactly the failure mode the project is about.
+### First full run
+
+`claude-sonnet-5-5`, all 68 problems, both modes, run with `python bench/run_bench.py --compare` against commit `276136a`.
+
+| Mode | Passed | Accuracy |
+|---|---|---|
+| raw | 63 / 68 | 93% |
+| tools | 66 / 68 | 97% |
+
+Per trap, worst first. A problem carries several trap tags, so one miss shows up in every row it is tagged with.
+
+| Trap | n | raw | tools |
+|---|---:|---:|---:|
+| `weld_case_4` | 4 | 0% | 50% |
+| `weld_net_area` | 4 | 25% | 50% |
+| `which_limit_state` | 15 | 73% | 87% |
+| `xbar_vs_ybar` | 12 | 92% | 100% |
+| `n_minus_1` | 14 | 93% | 100% |
+| `hole_count` | 14 | 93% | 100% |
+| `governing_direction` | 14 | 100% | 100% |
+| `units` | 45 | 100% | 100% |
+| `per_segment_K` | 13 | 100% | 100% |
+| `recommended_K` | 28 | 100% | 100% |
+| `multi_segment` | 4 | 100% | 100% |
+| `hole_allowance` | 3 | 100% | 100% |
+| `grade_dependent_lambda` | 2 | 100% | 100% |
+| `bolt_fit` | 1 | 100% | 100% |
+| `lrfd_vs_asd` | 1 | 100% | 100% |
+| `elastic_branch` | 1 | 100% | 100% |
+
+The failures concentrate in one place: a channel welded with **longitudinal welds only** (`weld_case_4`, 0% → 50%; `weld_net_area`, 25% → 50%). In all four raw-mode misses the model reported 394–397 kips, which is gross-section yielding (0.9 × 50 × 8.81 = 396.5 k). It never applied the Table D3.1 Case 4 shear-lag reduction, so rupture never governed. The correct answers are 259.5, 329.9 and 375.4 k for 8, 12 and 18 in. welds. The remaining sub-100% rows are mostly the same problems counted again: both tools-mode `which_limit_state` misses are weld problems, and every raw miss outside the weld problems is one bolted angle (`gen-ten-004`, 168.2 k against 164.0 k, just outside the 2% tolerance). Outside the weld problems, nothing scored below 92% in either mode. At n = 4, the weld rows show where the reasoning breaks, not a precise rate.
+
+Caveat: neither tools-mode miss is a wrong engine result. `gen-ten-015` produced no parseable JSON answer. In `gen-ten-016` the model got 396.4 k back, gross yielding again, because its tool call did not describe a Case 4 connection; called with the stated weld geometry, the engine returns the correct 375.4 k. The run does not log tool inputs, so the exact input error is not recorded.
+
+Reproduce with `python bench/run_bench.py --compare`; it writes `results.json`.
 
 ---
 
