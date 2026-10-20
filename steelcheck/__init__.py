@@ -20,7 +20,7 @@ Quick start::
     print(cap.report())   # the full hand calculation
 """
 
-from . import compression, materials, shapes, tension
+from . import compression, flexure, materials, shapes, tension
 from .compression import Axis, K_for, Segment
 from .materials import Material
 from .shapes import Shape
@@ -31,6 +31,7 @@ __version__ = "0.1.0"
 
 __all__ = [
     "compression",
+    "flexure",
     "materials",
     "shapes",
     "tension",

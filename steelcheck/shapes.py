@@ -53,6 +53,10 @@ class Shape:
     Sy: float | None = None
     Zx: float | None = None
     Zy: float | None = None
+    J: float | None = None  # St. Venant torsional constant, in^4
+    Cw: float | None = None  # warping constant, in^6
+    rts: float | None = None  # effective radius of gyration for LTB, in
+    ho: float | None = None  # distance between flange centroids, in
     xbar: float | None = None  # centroid from back of leg/web, in
     ybar: float | None = None
     leg_long: float | None = None  # angles, in
@@ -93,9 +97,14 @@ class Shape:
 # ---------------------------------------------------------------------------
 
 _SEED: list[Shape] = [
+    # A, bf/2tf, h/tw, rx, ry from lecture; the rest (needed for flexure) from
+    # steelpy, not stated in lecture.
     Shape(
-        "W12X65", "W", A=19.1, bf_2tf=9.92, h_tw=24.9, rx=5.28, ry=3.02,
-        source="lecture 2026-09-17",
+        "W12X65", "W", A=19.1, d=12.1, bf=12.0, tf=0.605, tw=0.390,
+        bf_2tf=9.92, h_tw=24.9, rx=5.28, ry=3.02,
+        Ix=533.0, Iy=174.0, Sx=87.9, Sy=29.1, Zx=96.8, Zy=44.1,
+        J=2.18, Cw=5780.0, rts=3.38, ho=11.5,
+        source="lecture 2026-09-17 (A, bf/2tf, h/tw, rx, ry); rest from steelpy -- verify",
     ),
     Shape(
         "W10X30", "W", A=8.84, bf=5.81, tf=0.510, tw=0.300,
@@ -105,7 +114,31 @@ _SEED: list[Shape] = [
         "W24X76", "W", A=22.4, d=23.9, bf=8.99, tf=0.680, tw=0.440,
         bf_2tf=6.61, h_tw=49.0, rx=9.69, ry=1.92,
         Ix=2100.0, Iy=82.5, Sx=176.0, Sy=18.4, Zx=200.0,
+        J=2.68, Cw=11100.0, rts=2.33, ho=23.2,
         source="lecture 2026-10-01 / Assignment 1",
+    ),
+    # Flexure validation shapes. Not from lecture: properties from steelpy, with
+    # bf/2tf and h/tw derived as in load_from_steelpy(). Confirm against Table 1-1.
+    Shape(
+        "W18X35", "W", A=10.3, d=17.7, bf=6.00, tf=0.425, tw=0.300,
+        bf_2tf=7.06, h_tw=53.5, rx=7.04, ry=1.22,
+        Ix=510.0, Iy=15.3, Sx=57.6, Sy=5.12, Zx=66.5, Zy=8.06,
+        J=0.506, Cw=1140.0, rts=1.51, ho=17.3,
+        source="steelpy -- verify",
+    ),
+    Shape(
+        "W16X31", "W", A=9.13, d=15.9, bf=5.53, tf=0.440, tw=0.275,
+        bf_2tf=6.28, h_tw=51.7, rx=6.41, ry=1.17,
+        Ix=375.0, Iy=12.4, Sx=47.2, Sy=4.49, Zx=54.0, Zy=7.03,
+        J=0.461, Cw=739.0, rts=1.42, ho=15.5,
+        source="steelpy -- verify",
+    ),
+    Shape(
+        "W21X48", "W", A=14.1, d=20.6, bf=8.14, tf=0.430, tw=0.350,
+        bf_2tf=9.47, h_tw=53.5, rx=8.24, ry=1.66,
+        Ix=959.0, Iy=38.7, Sx=93.0, Sy=9.52, Zx=107.0, Zy=14.9,
+        J=0.803, Cw=3950.0, rts=2.05, ho=20.2,
+        source="steelpy -- verify",
     ),
     # rx/ry = 1.66 was stated in lecture; rx, ry and A below reproduce both that
     # ratio and the quoted capacities. Confirm against Table 1-1 before reuse.
@@ -170,6 +203,7 @@ _CSV_MAP = {
     "bf/2tf": "bf_2tf", "h/tw": "h_tw",
     "rx": "rx", "ry": "ry", "Ix": "Ix", "Iy": "Iy",
     "Sx": "Sx", "Sy": "Sy", "Zx": "Zx", "Zy": "Zy",
+    "J": "J", "Cw": "Cw", "rts": "rts", "ho": "ho",
     "x": "xbar", "y": "ybar", "B": "leg_long", "b": "leg_short",
 }
 
@@ -314,7 +348,8 @@ def load_from_steelpy(families: list[str] | None = None, overwrite: bool = True)
             if kwargs.get("A") is None:
                 continue
 
-            for field in ("rx", "ry", "Ix", "Iy", "Sx", "Sy", "Zx", "Zy"):
+            for field in ("rx", "ry", "Ix", "Iy", "Sx", "Sy", "Zx", "Zy",
+                         "J", "Cw", "rts", "ho"):
                 put(field, g(field))
             put("xbar", g("x"))
             put("ybar", g("y"))
